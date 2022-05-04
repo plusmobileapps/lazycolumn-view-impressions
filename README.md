@@ -2,6 +2,8 @@
 
 Jetpack Compose sample of tracking items viewed in a lazy column exactly once for view impression analytics
 
+![](docs/lazy-column-analytics.gif)
+
 ```kotlin
 @Composable
 fun ListView() {
