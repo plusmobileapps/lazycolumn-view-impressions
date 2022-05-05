@@ -1,49 +1,12 @@
 # Jetpack Compose Lazy Column Analytics
 
-Jetpack Compose sample of tracking items viewed in a lazy column exactly once for view impression analytics
+Jetpack Compose sample of tracking items viewed in a lazy column exactly once for view impression analytics. 
 
-![](docs/lazy-column-analytics.gif)
+![](docs/lazy-column-view.gif)
 
-```kotlin
-@Composable
-fun ListView() {
-    val people: List<Pair<String, String>> = TODO()
-    val lazyListState = rememberLazyListState()
-    people.forEach { person ->
-        ItemImpression(key = person.first, lazyListState = lazyListState) {
-            Log.d("Analytics Tracker", "Item was viewed: ${person.second}")
-        }
-    }
-    LazyColumn(state = lazyListState) {
-        items(people.size, key = { people[it].first }) {
-            val (key, name) = people[it]
-            PersonRow(name)
-        }
-    }
-}
+## Quick Links
 
-@Composable
-fun ItemImpression(key: String, lazyListState: LazyListState, onItemViewed: () -> Unit) {
-    var isItemViewed by remember {
-        mutableStateOf(false)
-    }
-    val isItemWithKeyInView by remember {
-        derivedStateOf {
-            lazyListState.layoutInfo
-                .visibleItemsInfo
-                .any { it.key == key }
-                    && !isItemViewed
-        }
-    }
-    if (isItemWithKeyInView) {
-        LaunchedEffect(Unit) {
-            isItemViewed = true
-            onItemViewed()
-        }
-    }
-}
-```
-
-## Resources
-
-* [Stackoverflow answer](https://stackoverflow.com/a/70951303/7900721)
+* [blog post](https://plusmobileapps.com/2022/05/04/lazy-column-view-impressions.html) describing everything done in this project
+* [MainActivity](https://github.com/plusmobileapps/lazycolumn-view-impressions/blob/main/app/src/main/java/com/plusmobileapps/lazygridviewimpression/MainActivity.kt) - all the compose related code
+* [MainViewModel](https://github.com/plusmobileapps/lazycolumn-view-impressions/blob/main/app/src/main/java/com/plusmobileapps/lazygridviewimpression/MainViewModel.kt) - state management and delegated to `AnalyticsTracker` 
+* [AnalyticsTracker](https://github.com/plusmobileapps/lazycolumn-view-impressions/blob/main/app/src/main/java/com/plusmobileapps/lazygridviewimpression/AnalyticsTracker.kt) - simple class for tracking view impressions exactly once per key
